@@ -1,19 +1,22 @@
-import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { auth } from 'firebase';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [AngularFireAuth]
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
 
   @ViewChild('sidenav') sidenavRef: MatSidenav;
 
   mobile: boolean;
 
-  constructor(private breakpointObserver: BreakpointObserver) {
+  constructor(private breakpointObserver: BreakpointObserver, private afAuth: AngularFireAuth) {
     breakpointObserver.observe([
       Breakpoints.Handset,
       Breakpoints.Tablet
@@ -42,6 +45,12 @@ export class AppComponent {
         }
       }
     });
+
+    afAuth.auth.signInAnonymously();
+  }
+
+  ngOnDestroy() {
+    this.afAuth.auth.signOut();
   }
 
   onActivate(element: any) {

@@ -3,13 +3,19 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
 import { Routes, RouterModule } from '@angular/router';
+import { AngularFireModule } from 'angularfire2';
+import { firebaseConfig } from '../environments/firebase.config';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AgmCoreModule } from '@agm/core';
+import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 import {
   MatSidenavModule,
   MatToolbarModule,
   MatListModule,
   MatButtonModule,
   MatIconModule,
-  MatCardModule
+  MatCardModule,
+  MatProgressSpinnerModule,
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
@@ -47,12 +53,17 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     LayoutModule,
     RouterModule.forRoot(appRoutes),
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule,
+    AgmCoreModule.forRoot({ apiKey: 'AIzaSyAMrM2lVpoHhnf7nSIU02QhrKtbXpMCc2g' }),
+    AgmSnazzyInfoWindowModule,
     MatSidenavModule,
     MatToolbarModule,
     MatListModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatProgressSpinnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

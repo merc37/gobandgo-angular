@@ -1,3 +1,19 @@
-<p>
-  map works!
-</p>
+<div class="flex-grow-1" #mapDiv>
+  <agm-map (idle)="onMapIdle()" [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" [style.height]="mapHeightStyle">
+
+    <agm-marker *ngFor="let marker of markers | async" [latitude]="marker.latitude" [longitude]="marker.longitude" [title]="marker.address"
+      animation="DROP">
+
+      <agm-snazzy-info-window [maxWidth]="320" [closeWhenOthersOpen]="true" [fontColor]="'black'" [padding]="0">
+        <ng-template>
+          <div class="d-flex">
+            {{marker.address}}
+          </div>
+        </ng-template>
+      </agm-snazzy-info-window>
+
+    </agm-marker>
+
+  </agm-map>
+</div>
+<mat-spinner [diameter]="48" [hidden]="spinnerHidden"></mat-spinner>
