@@ -1,3 +1,55 @@
-<p>
-  sign-up works!
-</p>
+<div class="flex-grow-1 d-flex flex-column">
+  <mat-horizontal-stepper class="flex-grow-1" linear #stepper>
+    <mat-step label="Enter Name" [stepControl]="nameFormGroup">
+      <form [formGroup]="nameFormGroup">
+        <mat-form-field>
+          <input matInput type="text" placeholder="First Name" formControlName="firstNameInput">
+          <mat-error>First Name Required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Last Name" formControlName="lastNameInput">
+          <mat-error>Last Name Required</mat-error>
+        </mat-form-field>
+        <button mat-raised-button matStepperNext>Next</button>
+      </form>
+    </mat-step>
+    <mat-step label="Enter Email" [stepControl]="emailFormGroup">
+      <form [formGroup]="emailFormGroup">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Email" formControlName="emailInput">
+          <mat-error>Email Invalid</mat-error>
+        </mat-form-field>
+        <button mat-raised-button matStepperNext>Next</button>
+      </form>
+    </mat-step>
+    <mat-step label="Enter Address" [stepControl]="addressFormGroup">
+      <form [formGroup]="addressFormGroup">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Address" formControlName="addressInput">
+          <mat-error>Address Required</mat-error>
+        </mat-form-field>
+        <button mat-raised-button matStepperNext>Next</button>
+      </form>
+    </mat-step>
+    <mat-step label="Enter Message" [stepControl]="messageFormGroup" optional>
+      <form [formGroup]="messageFormGroup">
+        <mat-form-field>
+          <textarea matInput name="message" placeholder="Message" formControlName="messageInput" #messageTextArea></textarea>
+          <mat-hint align="end">{{messageTextArea.value?.length || 0}}/200</mat-hint>
+        </mat-form-field>
+        <button mat-raised-button matStepperNext>Next</button>
+      </form>
+    </mat-step>
+    <mat-step label="Pick a Photo" optional>
+      <div>
+        <button mat-raised-button type="button" (click)="fileInput.click()">Pick a Photo</button>
+        <input hidden type="file" #fileInput accept="image/*" (change)="onFilesChange($event)">
+        <div *ngIf="photo != null">{{photo.name}} added!</div>
+      </div>
+      <button mat-raised-button matStepperNext color="primary">Done</button>
+    </mat-step>
+    <mat-step label="Done">
+      <button mat-raised-button (click)="onSubmit()" color="primary">Submit</button>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

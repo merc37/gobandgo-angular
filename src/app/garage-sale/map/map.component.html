@@ -4,10 +4,14 @@
     <agm-marker *ngFor="let marker of markers | async" [latitude]="marker.latitude" [longitude]="marker.longitude" [title]="marker.address"
       animation="DROP">
 
-      <agm-snazzy-info-window [maxWidth]="320" [closeWhenOthersOpen]="true" [fontColor]="'black'" [padding]="0">
+      <agm-snazzy-info-window [maxWidth]="512" [maxHeight]="512" [closeWhenOthersOpen]="true" [fontColor]="'black'" [padding]="'16px'">
         <ng-template>
-          <div class="d-flex">
-            {{marker.address}}
+          <div class="">
+            <div class="">
+              <img src="{{marker.downloadUrl}}" width="448" max-height="448">
+            </div>
+            <div class="">{{marker.address}}</div>
+            <div class="">{{marker.message}}</div>
           </div>
         </ng-template>
       </agm-snazzy-info-window>
