@@ -22,7 +22,9 @@ import {
     MatFormFieldModule,
     MatInputModule,
     MatDialogModule,
-    MatStepperModule
+    MatStepperModule,
+    MatExpansionModule,
+    MatRippleModule
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
@@ -80,7 +82,9 @@ const appRoutes: Routes = [
         MatFormFieldModule,
         MatInputModule,
         MatDialogModule,
-        MatStepperModule
+        MatStepperModule,
+        MatExpansionModule,
+        MatRippleModule
     ],
     providers: [],
     bootstrap: [AppComponent]

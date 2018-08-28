@@ -1,77 +1,67 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { ScreenChangeObserverService } from './size-change-observer.service';
 import { MatSidenav } from '@angular/material';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { auth } from 'firebase';
+import { Breakpoints } from '@angular/cdk/layout';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  providers: [AngularFireAuth]
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    providers: [AngularFireAuth]
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
 
-  @ViewChild('sidenav') sidenavRef: MatSidenav;
+    @ViewChild('sidenav') sidenavRef: MatSidenav;
 
-  mobile: boolean;
+    mobile: boolean;
 
-  constructor(private breakpointObserver: BreakpointObserver, private afAuth: AngularFireAuth) {
-    breakpointObserver.observe([
-      Breakpoints.Handset,
-      Breakpoints.Tablet
-    ]).subscribe(result => {
-      if (result.matches) {
-        this.mobile = true;
-        if (this.sidenavRef) {
-          if (this.sidenavRef.opened) {
-            this.sidenavRef.close();
-          }
-          this.sidenavRef.mode = 'over';
-        }
-      }
-    });
+    constructor(private screenChangeObserverService: ScreenChangeObserverService, private afAuth: AngularFireAuth) {
+        afAuth.auth.signInAnonymously();
+    }
 
-    breakpointObserver.observe([
-      Breakpoints.Web
-    ]).subscribe(result => {
-      if (result.matches) {
-        this.mobile = false;
-        if (this.sidenavRef) {
-          if (!this.sidenavRef.opened) {
+    ngOnInit() {
+        this.screenChangeObserverService.mobileSizeObservable.subscribe((result) => {
+            if (result.matches) {
+                this.mobile = true;
+                if (this.sidenavRef) {
+                    this.sidenavRef.mode = 'over';
+                    if (this.sidenavRef.opened) {
+                        this.sidenavRef.close();
+                    }
+                }
+            }
+
+            if (!result.matches) {
+                if (this.sidenavRef) {
+                    this.sidenavRef.mode = 'side';
+                    if (!this.sidenavRef.opened) {
+                        this.sidenavRef.open();
+                    }
+                }
+            }
+        });
+    }
+
+    ngOnDestroy() {
+        this.afAuth.auth.signOut();
+    }
+
+    openSidenav() {
+        if (this.sidenavRef && this.mobile && !this.sidenavRef.opened) {
             this.sidenavRef.open();
-          }
-          this.sidenavRef.mode = 'side';
         }
-      }
-    });
-
-    afAuth.auth.signInAnonymously();
-  }
-
-  ngOnDestroy() {
-    this.afAuth.auth.signOut();
-  }
-
-  onActivate(element: any) {
-
-  }
-
-  openSidenav() {
-    if (this.sidenavRef && this.mobile && !this.sidenavRef.opened) {
-      this.sidenavRef.open();
     }
-  }
 
-  closeSidenav() {
-    if (this.sidenavRef && this.mobile && this.sidenavRef.opened) {
-      this.sidenavRef.close();
+    closeSidenav() {
+        if (this.sidenavRef && this.mobile && this.sidenavRef.opened) {
+            this.sidenavRef.close();
+        }
     }
-  }
 
-  swipeSideNavLeft() {
-    if (this.sidenavRef && this.mobile && this.sidenavRef.opened) {
-      this.sidenavRef.close();
+    swipeSideNavLeft() {
+        if (this.sidenavRef && this.mobile && this.sidenavRef.opened) {
+            this.sidenavRef.close();
+        }
     }
-  }
 }

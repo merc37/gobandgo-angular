@@ -20,4 +20,4 @@
 
   </agm-map>
 </div>
-<mat-spinner [diameter]="48" [hidden]="spinnerHidden"></mat-spinner>
+<mat-spinner [diameter]="48" *ngIf="!spinnerHidden"></mat-spinner>

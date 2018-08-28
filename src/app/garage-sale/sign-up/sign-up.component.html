@@ -1,5 +1,16 @@
 <div class="flex-grow-1 d-flex flex-column">
-  <mat-horizontal-stepper class="flex-grow-1" linear #stepper>
+  <mat-horizontal-stepper class="flex-grow-1" linear #stepper *ngIf="!mobile">
+    <mat-step label="Enter Address" [stepControl]="addressFormGroup">
+      <form [formGroup]="addressFormGroup">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Address" formControlName="addressInput" #addressInput>
+          <mat-error *ngIf="addressFormGroup.controls['addressInput'].hasError('required')">Address Required</mat-error>
+          <mat-error *ngIf="addressFormGroup.controls['addressInput'].hasError('geocode')">Address Could Not Be Found</mat-error>
+          <mat-error *ngIf="addressFormGroup.controls['addressInput'].hasError('addressCheck')">Address Already Added</mat-error>
+        </mat-form-field>
+        <button mat-raised-button matStepperNext>Next</button>
+      </form>
+    </mat-step>
     <mat-step label="Enter Name" [stepControl]="nameFormGroup">
       <form [formGroup]="nameFormGroup">
         <mat-form-field>
@@ -13,20 +24,13 @@
         <button mat-raised-button matStepperNext>Next</button>
       </form>
     </mat-step>
+
     <mat-step label="Enter Email" [stepControl]="emailFormGroup">
       <form [formGroup]="emailFormGroup">
         <mat-form-field>
           <input matInput type="text" placeholder="Email" formControlName="emailInput">
-          <mat-error>Email Invalid</mat-error>
-        </mat-form-field>
-        <button mat-raised-button matStepperNext>Next</button>
-      </form>
-    </mat-step>
-    <mat-step label="Enter Address" [stepControl]="addressFormGroup">
-      <form [formGroup]="addressFormGroup">
-        <mat-form-field>
-          <input matInput type="text" placeholder="Address" formControlName="addressInput">
-          <mat-error>Address Required</mat-error>
+          <mat-error *ngIf="emailFormGroup.controls['emailInput'].hasError('required')">Email Required</mat-error>
+          <mat-error *ngIf="emailFormGroup.controls['emailInput'].hasError('email')">Email Invalid</mat-error>
         </mat-form-field>
         <button mat-raised-button matStepperNext>Next</button>
       </form>
@@ -34,7 +38,7 @@
     <mat-step label="Enter Message" [stepControl]="messageFormGroup" optional>
       <form [formGroup]="messageFormGroup">
         <mat-form-field>
-          <textarea matInput name="message" placeholder="Message" formControlName="messageInput" #messageTextArea></textarea>
+          <textarea matInput name="message" placeholder="Message" formControlName="messageInput" #messageTextArea maxlength="200"></textarea>
           <mat-hint align="end">{{messageTextArea.value?.length || 0}}/200</mat-hint>
         </mat-form-field>
         <button mat-raised-button matStepperNext>Next</button>
@@ -42,14 +46,73 @@
     </mat-step>
     <mat-step label="Pick a Photo" optional>
       <div>
-        <button mat-raised-button type="button" (click)="fileInput.click()">Pick a Photo</button>
+        <button mat-raised-button type="button" (click)="fileInput.click()" color="primary">Pick a Photo</button>
         <input hidden type="file" #fileInput accept="image/*" (change)="onFilesChange($event)">
-        <div *ngIf="photo != null">{{photo.name}} added!</div>
+        <img src="{{photoPreviewUrl}}" width="448" max-height="448">
       </div>
-      <button mat-raised-button matStepperNext color="primary">Done</button>
+      <button mat-raised-button matStepperNext>Next</button>
     </mat-step>
     <mat-step label="Done">
       <button mat-raised-button (click)="onSubmit()" color="primary">Submit</button>
     </mat-step>
   </mat-horizontal-stepper>
+  <mat-vertical-stepper class="flex-grow-1" linear #stepper *ngIf="mobile">
+    <mat-step label="Enter Address" [stepControl]="addressFormGroup">
+      <form [formGroup]="addressFormGroup">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Address" formControlName="addressInput" #addressInput>
+          <mat-error *ngIf="addressFormGroup.controls['addressInput'].hasError('required')">Address Required</mat-error>
+          <mat-error *ngIf="addressFormGroup.controls['addressInput'].hasError('geocode')">Address Could Not Be Found</mat-error>
+          <mat-error *ngIf="addressFormGroup.controls['addressInput'].hasError('addressCheck')">Address Already Added</mat-error>
+        </mat-form-field>
+        <button mat-raised-button matStepperNext>Next</button>
+      </form>
+    </mat-step>
+    <mat-step label="Enter Name" [stepControl]="nameFormGroup">
+      <form [formGroup]="nameFormGroup">
+        <mat-form-field>
+          <input matInput type="text" placeholder="First Name" formControlName="firstNameInput">
+          <mat-error>First Name Required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Last Name" formControlName="lastNameInput">
+          <mat-error>Last Name Required</mat-error>
+        </mat-form-field>
+        <button mat-raised-button matStepperNext>Next</button>
+      </form>
+    </mat-step>
+
+    <mat-step label="Enter Email" [stepControl]="emailFormGroup">
+      <form [formGroup]="emailFormGroup">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Email" formControlName="emailInput">
+          <mat-error *ngIf="emailFormGroup.controls['emailInput'].hasError('required')">Email Required</mat-error>
+          <mat-error *ngIf="emailFormGroup.controls['emailInput'].hasError('email')">Email Invalid</mat-error>
+        </mat-form-field>
+        <button mat-raised-button matStepperNext>Next</button>
+      </form>
+    </mat-step>
+    <mat-step label="Enter Message" [stepControl]="messageFormGroup" optional>
+      <form [formGroup]="messageFormGroup">
+        <mat-form-field>
+          <textarea matInput name="message" placeholder="Message" formControlName="messageInput" #messageTextArea maxlength="200"></textarea>
+          <mat-hint align="end">{{messageTextArea.value?.length || 0}}/200</mat-hint>
+        </mat-form-field>
+        <button mat-raised-button matStepperNext>Next</button>
+      </form>
+    </mat-step>
+    <mat-step label="Pick a Photo" optional>
+      <div>
+        <button mat-raised-button type="button" (click)="fileInput.click()" color="primary">Pick a Photo</button>
+        <input hidden type="file" #fileInput accept="image/*" (change)="onFilesChange($event)">
+        <img src="{{photoPreviewUrl}}" width="448" max-height="448">
+      </div>
+      <button mat-raised-button matStepperNext>Next</button>
+    </mat-step>
+    <mat-step label="Done">
+      <button mat-raised-button (click)="onSubmit()" color="primary">Submit</button>
+    </mat-step>
+  </mat-vertical-stepper>
 </div>
+
+<mat-spinner [diameter]="48" *ngIf="addressFormGroup.status === 'PENDING'"></mat-spinner>
