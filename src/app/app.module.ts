@@ -11,6 +11,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { AgmCoreModule } from '@agm/core';
 import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
+import { SlideshowModule } from 'ng-simple-slideshow';
 import {
     MatSidenavModule,
     MatToolbarModule,
@@ -24,14 +25,14 @@ import {
     MatDialogModule,
     MatStepperModule,
     MatExpansionModule,
-    MatRippleModule
+    MatRippleModule,
+    MatDividerModule,
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { InformationComponent } from './garage-sale/information/information.component';
 import { MapComponent } from './garage-sale/map/map.component';
-import { PrintableMapComponent } from './garage-sale/printable-map/printable-map.component';
 import { SignUpComponent } from './garage-sale/sign-up/sign-up.component';
 import { DownloadsComponent } from './downloads/downloads.component';
 import { InfoDialogComponent } from './info-dialog/info-dialog.component';
@@ -40,7 +41,6 @@ const appRoutes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'information', component: InformationComponent },
     { path: 'map', component: MapComponent },
-    { path: 'printable-map', component: PrintableMapComponent },
     { path: 'sign-up', component: SignUpComponent },
     { path: 'downloads', component: DownloadsComponent },
     { path: '**', redirectTo: '/home' }
@@ -55,7 +55,6 @@ const appRoutes: Routes = [
         HomeComponent,
         InformationComponent,
         MapComponent,
-        PrintableMapComponent,
         SignUpComponent,
         DownloadsComponent,
         InfoDialogComponent
@@ -84,7 +83,9 @@ const appRoutes: Routes = [
         MatDialogModule,
         MatStepperModule,
         MatExpansionModule,
-        MatRippleModule
+        MatRippleModule,
+        MatDividerModule,
+        SlideshowModule
     ],
     providers: [],
     bootstrap: [AppComponent]
