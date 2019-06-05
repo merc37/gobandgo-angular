@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ScreenChangeObserverService } from './size-change-observer.service';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Breakpoints } from '@angular/cdk/layout';
 
