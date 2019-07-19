@@ -1,7 +1,24 @@
-mat-expansion-panel {
-  box-shadow: none !important;
+.full-width {
+    width: 100%;
 }
 
-.list-item-icon {
-  margin-right: 16px;
+.menu-button {
+    transition: 300ms ease-in-out;
+    transform: rotate(0deg);
+}
+
+.menu-button.rotated {
+    transform: rotate(180deg);
+}
+
+.submenu {
+    overflow-y: hidden;
+    transition: transform 300ms ease;
+    transform: scaleY(0);
+    transform-origin: top;
+    padding-left: 30px;
+}
+
+.submenu.expanded {
+    transform: scaleY(1);
 }

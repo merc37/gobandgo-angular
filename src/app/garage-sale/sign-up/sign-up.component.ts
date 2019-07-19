@@ -6,10 +6,11 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireStorage } from 'angularfire2/storage';
 import { GeocodeService } from '../../geocode.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatHorizontalStepper } from '@angular/material/stepper';
+import { MatVerticalStepper } from '@angular/material/stepper';
 import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
 import { FormGroup, FormBuilder, Validators, ValidationErrors, AbstractControl, FormControl } from '@angular/forms';
 import { ScreenChangeObserverService } from '../../size-change-observer.service';
+import { Marker } from '../../marker';
 
 @Component({
     selector: 'app-sign-up',
@@ -24,7 +25,7 @@ export class SignUpComponent implements OnInit {
 
     private defaultImageUrl: string;
 
-    @ViewChild('stepper') stepperRef: MatHorizontalStepper;
+    @ViewChild('stepper', { read: MatVerticalStepper, static: false }) stepperRef: MatVerticalStepper;
 
     mobile: boolean;
 
@@ -51,6 +52,9 @@ export class SignUpComponent implements OnInit {
 
     addressValidate(ctrl: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
         return new Promise((resolve, reject) => {
+            if (!ctrl.value.match(/\d+/g)) {
+                return resolve({ notValid: "Not a valid address" });
+            }
             return this.geocodeService.codeAddress(ctrl.value).toPromise().then((geocodeResult) => {
                 const addressKey = geocodeResult[0].formatted_address.slice(0, geocodeResult[0].formatted_address.indexOf(',')).replace(/\s+/g, '');
                 return this.db.object('addressesAdded/' + addressKey).valueChanges().pipe(take(1)).subscribe((value) => {
@@ -118,32 +122,33 @@ export class SignUpComponent implements OnInit {
     }
 
     onSubmit() {
-        const marker = {
-            timestamp: Date.now(),
-            date: new Date(Date.now()).toISOString(),
-            paid: false,
-            message: this.messageFormGroup.value.messageInput || 'Various Items For Sale',
-            email: this.emailFormGroup.value.emailInput,
-            firstName: this.nameFormGroup.value.firstNameInput,
-            lastName: this.nameFormGroup.value.lastNameInput,
-            address: this.geocodeResult[0].formatted_address.slice(0, this.geocodeResult[0].formatted_address.indexOf(',')),
-            latitude: this.geocodeResult[0].geometry.location.lat(),
-            longitude: this.geocodeResult[0].geometry.location.lng(),
-            downloadUrl: this.defaultImageUrl
-        };
+        const marker = new Marker(this.geocodeResult[0].formatted_address.slice(0, this.geocodeResult[0].formatted_address.indexOf(',')),
+            new Date(Date.now()).toISOString(),
+            this.defaultImageUrl,
+            this.emailFormGroup.value.emailInput,
+            this.nameFormGroup.value.firstNameInput,
+            this.nameFormGroup.value.lastNameInput,
+            this.geocodeResult[0].geometry.location.lat(),
+            this.geocodeResult[0].geometry.location.lng(),
+            this.messageFormGroup.value.messageInput || 'Various Items For Sale',
+            false,
+            Date.now());
         const markerKey = this.db.createPushId();
-        this.db.object('markers/' + markerKey).set(marker).then(() => {
+        this.db.object<Marker>('markers/' + markerKey).set(marker).then(() => {
             if (this.photo) {
                 const photoPath = markerKey + '/garageSalePhoto' + this.photo.name.slice(this.photo.name.lastIndexOf('.'), this.photo.name.length);
                 this.storage.upload(photoPath, this.photo);
             }
-            this.dialog.open(InfoDialogComponent, {
-                data: {
-                    title: 'Map Marker Submitted!',
-                    content: 'Marker will display on map when paid for, see info page for details',
-                }
+            const addressKey = marker.address.replace(/\s+/g, '');
+            this.db.object('addressesAdded/' + addressKey).set(true).then(() => {
+                this.dialog.open(InfoDialogComponent, {
+                    data: {
+                        title: 'Map Marker Submitted!',
+                        content: 'Marker will display on map when paid for, see info page for details',
+                    }
+                });
+                this.reset();
             });
-            this.reset();
         });
 
     }

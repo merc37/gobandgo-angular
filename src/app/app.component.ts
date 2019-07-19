@@ -12,9 +12,10 @@ import { Breakpoints } from '@angular/cdk/layout';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-    @ViewChild('sidenav') sidenavRef: MatSidenav;
+    @ViewChild('sidenav', { read: MatSidenav, static: false }) sidenavRef: MatSidenav;
 
     mobile: boolean;
+    showGarageSaleSubMenu = false;
 
     constructor(private screenChangeObserverService: ScreenChangeObserverService, private afAuth: AngularFireAuth) {
         afAuth.auth.signInAnonymously();
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
             }
 
             if (!result.matches) {
+                this.mobile = false;
                 if (this.sidenavRef) {
                     this.sidenavRef.mode = 'side';
                     if (!this.sidenavRef.opened) {

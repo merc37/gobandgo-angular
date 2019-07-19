@@ -1,49 +1,49 @@
 <div class="flex-grow-1 d-flex flex-column h-100">
-  <mat-sidenav-container class="d-flex flex-column flex-grow-1">
-    <mat-sidenav (swipeleft)="swipeSideNavLeft()" #sidenav>
-      <mat-toolbar class="mat-elevation-z5" color="primary">GoBandGo!</mat-toolbar>
-      <mat-nav-list role="navigation">
-        <a mat-list-item routerLink="/home" (click)="closeSidenav()">
-          <mat-icon class="list-item-icon">home</mat-icon>
-          Home
-        </a>
-        <a mat-list-item routerLink="/downloads" (click)="closeSidenav()">
-          <mat-icon class="list-item-icon">cloud_download</mat-icon>
-          Downloads
-        </a>
-        <mat-expansion-panel open>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Garage Sale
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <a mat-list-item routerLink="/information" (click)="closeSidenav()">
-            <mat-icon class="list-item-icon">info_outline</mat-icon>
-            Information
-          </a>
-          <a mat-list-item routerLink="/map" (click)="closeSidenav()">
-            <mat-icon class="list-item-icon">map</mat-icon>
-            Map
-          </a>
-          <a mat-list-item routerLink="/printable-map" (click)="closeSidenav()">
-            <mat-icon class="list-item-icon">print</mat-icon>
-            Printable Map
-          </a>
-          <a mat-list-item routerLink="/sign-up" (click)="closeSidenav()">
-            <mat-icon class="list-item-icon">person_add</mat-icon>
-            Sign Up
-          </a>
-        </mat-expansion-panel>
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content class="d-flex flex-column flex-grow-1">
-      <mat-toolbar class="mat-elevation-z5" color="primary">
+    <mat-toolbar class="mat-elevation-z5" color="primary">
         <button *ngIf="mobile" mat-icon-button (click)="openSidenav()">
-          <mat-icon>menu</mat-icon>
+            <mat-icon>menu</mat-icon>
         </button>
-        <span *ngIf="mobile">♫ GoBandGo! ♫</span>
-      </mat-toolbar>
-      <router-outlet appRouterOutlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+        <span>♫ GoBandGo! ♫</span>
+    </mat-toolbar>
+    <mat-sidenav-container class="d-flex flex-column flex-grow-1">
+        <mat-sidenav (swipeleft)="swipeSideNavLeft()" #sidenav>
+            <!-- <mat-toolbar class="mat-elevation-z5" color="primary">GoBandGo!</mat-toolbar> -->
+            <mat-nav-list role="navigation">
+                <a mat-list-item routerLink="/home" (click)="closeSidenav()">
+                    <mat-icon mat-list-icon>home</mat-icon>
+                    Home
+                </a>
+                <a mat-list-item routerLink="/downloads" (click)="closeSidenav()">
+                    <mat-icon mat-list-icon>cloud_download</mat-icon>
+                    Downloads
+                </a>
+                <mat-list-item (click)="showGarageSaleSubMenu = !showGarageSaleSubMenu" class="parent">
+                    <span class="full-width">Garage Sale</span>
+                    <mat-icon mat-list-icon>home</mat-icon>
+                    <mat-icon class="menu-button" [ngClass]="{'rotated' : showGarageSaleSubMenu}">expand_more</mat-icon>
+                </mat-list-item>
+                <div class="submenu" [ngClass]="{'expanded' : showGarageSaleSubMenu}">
+                    <a mat-list-item routerLink="/information" (click)="closeSidenav()">
+                        <mat-icon class="list-item-icon">info_outline</mat-icon>
+                        Information
+                    </a>
+                    <a mat-list-item routerLink="/map" (click)="closeSidenav()">
+                        <mat-icon class="list-item-icon">map</mat-icon>
+                        Map
+                    </a>
+                    <a mat-list-item routerLink="/printable-map" (click)="closeSidenav()">
+                        <mat-icon class="list-item-icon">print</mat-icon>
+                        Printable Map
+                    </a>
+                    <a mat-list-item routerLink="/sign-up" (click)="closeSidenav()">
+                        <mat-icon class="list-item-icon">person_add</mat-icon>
+                        Sign Up
+                    </a>
+                </div>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content class="d-flex flex-column flex-grow-1">
+            <router-outlet appRouterOutlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
 </div>

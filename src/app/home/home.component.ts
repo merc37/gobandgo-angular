@@ -13,6 +13,8 @@ export class HomeComponent implements OnInit {
     @HostBinding('class.d-flex') dFlex = 'd-flex';
     @HostBinding('class.flex-column') flexColumn = 'flex-column';
 
+    homeBackground = "assets/garageSalePhoto.jpg"
+
     slideshowImageUrls: Array<string> = [];
     constructor(private db: AngularFireDatabase) {
         db.list('/slideshow').valueChanges().subscribe((imageUrls) => {
