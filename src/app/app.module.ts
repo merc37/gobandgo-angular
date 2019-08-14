@@ -26,6 +26,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -36,6 +37,7 @@ import { DownloadsComponent } from './downloads/downloads.component';
 import { InfoDialogComponent } from './info-dialog/info-dialog.component';
 import { AdminComponent } from './admin/admin.component';
 import { PrintableMapComponent } from './garage-sale/printable-map/printable-map.component';
+import { InputDialogComponent } from './input-dialog/input-dialog.component';
 
 const appRoutes: Routes = [
     { path: 'home', component: HomeComponent },
@@ -50,7 +52,8 @@ const appRoutes: Routes = [
 
 @NgModule({
     entryComponents: [
-        InfoDialogComponent
+        InfoDialogComponent,
+        InputDialogComponent
     ],
     declarations: [
         AppComponent,
@@ -61,7 +64,8 @@ const appRoutes: Routes = [
         DownloadsComponent,
         InfoDialogComponent,
         AdminComponent,
-        PrintableMapComponent
+        PrintableMapComponent,
+        InputDialogComponent
     ],
     imports: [
         ReactiveFormsModule,
@@ -89,7 +93,8 @@ const appRoutes: Routes = [
         MatRippleModule,
         MatDividerModule,
         MatTableModule,
-        MatSortModule
+        MatSortModule,
+        MatCheckboxModule
     ],
     providers: [],
     bootstrap: [AppComponent]

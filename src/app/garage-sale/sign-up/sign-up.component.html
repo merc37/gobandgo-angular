@@ -1,5 +1,5 @@
 <div class="flex-grow-1 d-flex flex-column">
-    <mat-horizontal-stepper class="flex-grow-1" linear #stepper *ngIf="!mobile">
+    <!-- <mat-horizontal-stepper class="flex-grow-1" linear #stepper *ngIf="!mobile">
         <mat-step label="Enter Address" [stepControl]="addressFormGroup">
             <form [formGroup]="addressFormGroup">
                 <mat-form-field>
@@ -63,8 +63,8 @@
         <mat-step label="Done">
             <button mat-raised-button (click)="onSubmit()" color="primary">Submit</button>
         </mat-step>
-    </mat-horizontal-stepper>
-    <mat-vertical-stepper class="flex-grow-1" linear #stepper *ngIf="mobile">
+    </mat-horizontal-stepper> *ngIf="mobile" -->
+    <mat-vertical-stepper class="flex-grow-1" linear #stepper>
         <mat-step label="Enter Address" [stepControl]="addressFormGroup">
             <form [formGroup]="addressFormGroup">
                 <mat-form-field>
@@ -104,6 +104,14 @@
                 <button mat-raised-button matStepperNext>Next</button>
             </form>
         </mat-step>
+        <mat-step label="Do you need a yard sign?" [stepControl]="signFormGroup">
+            <form [formGroup]="signFormGroup">
+                <mat-checkbox formControlName="signCheckbox">
+                    {{signFormGroup.controls['signCheckbox'].value == true ? "Yes" : "No"}}</mat-checkbox>
+                <br>
+                <button mat-raised-button matStepperNext>Next</button>
+            </form>
+        </mat-step>
         <mat-step label="Enter Message" [stepControl]="messageFormGroup" optional>
             <form [formGroup]="messageFormGroup">
                 <mat-form-field>
@@ -119,7 +127,7 @@
                 <button mat-raised-button type="button" (click)="fileInput.click()" color="primary">Pick a
                     Photo</button>
                 <input hidden type="file" #fileInput accept="image/*" (change)="onFilesChange($event)">
-                <img src="{{photoPreviewUrl}}" width="448" max-height="448">
+                <img src="{{photoPreviewUrl}}">
             </div>
             <button mat-raised-button matStepperNext>Next</button>
         </mat-step>

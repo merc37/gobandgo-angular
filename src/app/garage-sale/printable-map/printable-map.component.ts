@@ -1,25 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, HostBinding, SecurityContext } from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { Marker } from '../../marker';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-printable-map',
     templateUrl: './printable-map.component.html',
     styleUrls: ['./printable-map.component.css']
 })
-export class PrintableMapComponent implements OnInit {
+export class PrintableMapComponent {
 
-    mapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=40.877116,-74.029771&zoom=15&size=640x640&scale=2&key=AIzaSyAMrM2lVpoHhnf7nSIU02QhrKtbXpMCc2g&markers=";
+    @HostBinding('class.flex-grow-1') flexGrow1 = 'flex-grow-1';
+    @HostBinding('class.d-flex') dFlex = 'd-flex';
+    @HostBinding('class.flex-column') flexColumn = 'flex-column';
 
-    constructor(db: AngularFireDatabase) {
-        db.list<Marker>('/markers', ref => ref.orderByChild('paid').equalTo(true)).valueChanges().forEach((markers) => {
-            markers.forEach((marker) => {
-                this.mapUrl = this.mapUrl + (marker.latitude + "," + marker.longitude + "|");
-            });
+    pdf: any = null;
+
+    constructor(db: AngularFireDatabase, sanitizer: DomSanitizer) {
+        let sub = db.object('mapPDFURL').valueChanges().subscribe((data: string) => {
+            this.pdf = sanitizer.bypassSecurityTrustResourceUrl(data);
         });
     }
-
-    ngOnInit() {
-    }
-
 }

@@ -1,23 +1,25 @@
 <div class="flex-grow-1" #mapDiv>
-  <agm-map (idle)="onMapIdle()" [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" [style.height]="mapHeightStyle">
+    <agm-map (idle)="onMapIdle()" [latitude]="latitude" [longitude]="longitude" [zoom]="zoom"
+        [style.height]="mapHeightStyle">
 
-    <agm-marker *ngFor="let marker of markers | async" [latitude]="marker.latitude" [longitude]="marker.longitude" [title]="marker.address"
-      animation="DROP">
+        <agm-marker *ngFor="let marker of markers | async" [latitude]="marker.latitude" [longitude]="marker.longitude"
+            [title]="marker.address" animation="DROP">
 
-      <agm-snazzy-info-window [maxWidth]="512" [maxHeight]="512" [closeWhenOthersOpen]="true" [fontColor]="'black'" [padding]="'16px'">
-        <ng-template>
-          <div class="">
-            <div class="">
-              <img src="{{marker.downloadUrl}}" width="448" max-height="448">
-            </div>
-            <div class="">{{marker.address}}</div>
-            <div class="">{{marker.message}}</div>
-          </div>
-        </ng-template>
-      </agm-snazzy-info-window>
+            <agm-snazzy-info-window [maxWidth]="512" [maxHeight]="512" [closeWhenOthersOpen]="true"
+                [fontColor]="'black'" [padding]="'16px'">
+                <ng-template>
+                    <div class="">
+                        <div class="">
+                            <img src="{{marker.downloadUrl}}" width="224" max-height="224">
+                        </div>
+                        <div class="">{{marker.address}}</div>
+                        <div class="">{{marker.message}}</div>
+                    </div>
+                </ng-template>
+            </agm-snazzy-info-window>
 
-    </agm-marker>
+        </agm-marker>
 
-  </agm-map>
+    </agm-map>
 </div>
 <mat-spinner [diameter]="48" *ngIf="!spinnerHidden"></mat-spinner>

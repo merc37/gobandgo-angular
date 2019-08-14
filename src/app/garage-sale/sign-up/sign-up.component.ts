@@ -33,20 +33,31 @@ export class SignUpComponent implements OnInit {
 
     nameFormGroup: FormGroup;
     emailFormGroup: FormGroup;
+    signFormGroup: FormGroup;
     addressFormGroup: FormGroup;
     messageFormGroup: FormGroup;
     photoFormGroup: FormGroup;
     photo: File = null;
 
+    dialogRef = null;
+
     private geocodeResult: any;
 
     constructor(private db: AngularFireDatabase, private storage: AngularFireStorage, private geocodeService: GeocodeService,
         private dialog: MatDialog, private formBuilder: FormBuilder, private screenChangeObservableService: ScreenChangeObserverService) {
-        this.defaultImageUrl = 'https://firebasestorage.googleapis.com/v0/b/gobandgo-1344.appspot.com/o/default%2FgarageSaleSign.png?alt=media&token=e83d55e2-6e35-4d92-9b0c-60f0f7e9d6c8';
+        this.defaultImageUrl = 'https://firebasestorage.googleapis.com/v0/b/gobandgo-d21ee.appspot.com/o/default%2FgarageSaleSign.png?alt=media&token=a195ced4-6a04-40ee-993c-571ff7f29d37';
         this.photoPreviewUrl = this.defaultImageUrl;
 
         screenChangeObservableService.mobileSizeObservable.subscribe((result) => {
             this.mobile = result.matches;
+        });
+
+        dialog.afterAllClosed.subscribe(v => {
+            if (this.dialogRef == null) {
+                return;
+            }
+
+            this.reset();
         });
     }
 
@@ -57,6 +68,9 @@ export class SignUpComponent implements OnInit {
             }
             return this.geocodeService.codeAddress(ctrl.value).toPromise().then((geocodeResult) => {
                 const addressKey = geocodeResult[0].formatted_address.slice(0, geocodeResult[0].formatted_address.indexOf(',')).replace(/\s+/g, '');
+                if (addressKey === 'Bogota') {
+                    return resolve({ notValid: "Not a valid address" });
+                }
                 return this.db.object('addressesAdded/' + addressKey).valueChanges().pipe(take(1)).subscribe((value) => {
                     if (!value) {
                         this.geocodeResult = geocodeResult;
@@ -78,6 +92,10 @@ export class SignUpComponent implements OnInit {
 
         this.emailFormGroup = this.formBuilder.group({
             emailInput: ['', Validators.email]
+        });
+
+        this.signFormGroup = this.formBuilder.group({
+            signCheckbox: new FormControl(true)
         });
 
         this.addressFormGroup = this.formBuilder.group({
@@ -114,11 +132,12 @@ export class SignUpComponent implements OnInit {
     reset() {
         this.nameFormGroup.reset();
         this.emailFormGroup.reset();
-        this.addressFormGroup.reset();
         this.messageFormGroup.reset();
         this.photo = null;
         this.geocodeResult = null;
         this.stepperRef.reset();
+        this.addressFormGroup.reset();
+        this.dialogRef = null;
     }
 
     onSubmit() {
@@ -132,22 +151,19 @@ export class SignUpComponent implements OnInit {
             this.geocodeResult[0].geometry.location.lng(),
             this.messageFormGroup.value.messageInput || 'Various Items For Sale',
             false,
-            Date.now());
+            Date.now(), this.signFormGroup.value.signCheckbox);
+        delete marker._key;
         const markerKey = this.db.createPushId();
         this.db.object<Marker>('markers/' + markerKey).set(marker).then(() => {
             if (this.photo) {
                 const photoPath = markerKey + '/garageSalePhoto' + this.photo.name.slice(this.photo.name.lastIndexOf('.'), this.photo.name.length);
                 this.storage.upload(photoPath, this.photo);
             }
-            const addressKey = marker.address.replace(/\s+/g, '');
-            this.db.object('addressesAdded/' + addressKey).set(true).then(() => {
-                this.dialog.open(InfoDialogComponent, {
-                    data: {
-                        title: 'Map Marker Submitted!',
-                        content: 'Marker will display on map when paid for, see info page for details',
-                    }
-                });
-                this.reset();
+            this.dialogRef = this.dialog.open(InfoDialogComponent, {
+                data: {
+                    title: 'Map Marker Submitted!',
+                    content: 'Marker will display on map when paid for, see info page for details',
+                }
             });
         });
 

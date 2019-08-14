@@ -12,12 +12,8 @@ export class DownloadsComponent implements OnInit {
     @HostBinding('class.d-flex') dFlex = 'd-flex';
     @HostBinding('class.flex-column') flexColumn = 'flex-column';
 
-    garageSaleMapDownloadUrl: string = null;
+    constructor() {
 
-    constructor(private storage: AngularFireStorage) {
-        storage.ref('garageSaleMap.pdf').getDownloadURL().toPromise().then((downloadUrl) => {
-            this.garageSaleMapDownloadUrl = downloadUrl;
-        });
     }
 
     ngOnInit() {

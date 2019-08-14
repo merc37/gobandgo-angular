@@ -1,1 +1,4 @@
-<img src="{{mapUrl}}">
+<div class="flex-grow-1 d-flex flex-column">
+    <iframe [src]="pdf" height="100%" *ngIf="pdf != null"></iframe>
+</div>
+<mat-spinner [diameter]="48" *ngIf="pdf == null"></mat-spinner>
